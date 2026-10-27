@@ -12,12 +12,12 @@
     "KB-2914"
   ],
   "account_signals": [
-    "Account tier: Standard",
-    "No renewal within 90 days",
-    "No open escalations or active incidents"
+    "Clearwater Manufacturing (ACC-3737), Standard tier, renewal date 2027-08-16 (300 days to renewal).",
+    "Usage stable: recent 3-month average active users is 108.3 (no decline > 25%).",
+    "No open escalations or related tickets found."
   ],
-  "customer_reply": "Hello, thank you for contacting Zycus Support. We received your report that something is not working, but we need a bit more information to assist you effectively. Could you please specify which module or page you are trying to access, any error codes or messages you are seeing, and the steps to reproduce the issue? Once we have these details, our support team will investigate promptly.",
-  "internal_note": "Ticket description is extremely vague ('Nothing is working since yesterday'). Per KB-2914 (Insufficient information policy), when the module or symptom cannot be determined, do not guess. Set P3, request specific details (module, error text, affected users, time of failure), and route to L1 Support with needs_clarification = true.",
+  "customer_reply": "Hello,\n\nThank you for contacting Zycus Support. We received your report that something is not working, but we need a bit more information to investigate and assist you effectively.\n\nCould you please clarify:\n- Which specific module or feature you are trying to access (e.g., Sourcing, Contracts, Platform)?\n- What exact error message, symptom, or unexpected behavior you are encountering?\n- Are all users affected, or just specific ones?\n\nOnce we have these details, our team will look into this right away.\n\nBest regards,\nZycus Technical Support",
+  "internal_note": "Ticket description is extremely vague ('Nothing is working since yesterday. Please fix ASAP!!'). Per KB-2914 ('Insufficient information' section): if module or symptom cannot be determined, do not guess. Set P3, request specific details (module, error text, affected users, time of failure), and mark as needing clarification. Routed to L1 support.",
   "confidence": 1.0,
   "reasoning_trace": [
     {
@@ -47,7 +47,7 @@
     {
       "step": 5,
       "action": "get_support_policy",
-      "input": "topic=priority",
+      "input": "topic=",
       "observation": "Retrieved 3 policy articles: ['KB-2914', 'KB-5930', 'KB-6401']"
     }
   ]

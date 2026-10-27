@@ -23,15 +23,28 @@ Incoming Ticket ---> [Agent Loop (Gemini)] <---> [ToolKit: In-Memory Indexed Cor
 
 ---
 
-## 2. Evaluation Strategy
-1. **Schema Compliance**: 10/10 review tickets pass automated structural and type validation (`scripts/check_outputs.py`).
-2. **Account Resolution Accuracy**: Correctly maps 100% of missing `account_id` fields via unique `requester_domain` (e.g. `TKT-169327` resolved to `ACC-4850`).
-3. **Policy-Based Routing & Escalation**:
-   - **Data Exposure / Security**: Classifies suspected data leaks as `security`/`P1` routed to `security` (`TKT-135081` per `KB-6401`).
-   - **Account Risk Override**: Elevates priority to `P3` and notifies TAM when within 90-day renewal and active users drop >25% (`TKT-119877` per `KB-2914`).
-   - **Ambiguous Tickets**: Appropriately triggers `needs_clarification=True` without guessing (`TKT-128253`).
-4. **Duplicate Detection Precision**: Flags duplicates created within 7 days on the same module/error while ignoring resolved history (`TKT-192732` linked to `TKT-122022`).
-5. **Trace Faithfulness**: Reasoning traces record real, chronological tool actions and bounded observations without hallucinated data.
+## 2. Evaluation Results
+**10/10 review tickets pass** automated structural and type validation (`scripts/check_outputs.py`).
+
+| Ticket | Category | Priority | Route | Escalate | Notes |
+|---|---|---|---|---|---|
+| TKT-144939 | incident | P1 | L2_engineering | ✅ | High-severity incident |
+| TKT-119877 | how_to | P3 | L1_support | ❌ | Usage guidance |
+| TKT-160477 | incident | P3 | L1_support | ❌ | Standard incident |
+| TKT-192732 | duplicate | P3 | L1_support | ❌ | Linked to prior ticket |
+| TKT-169327 | incident | P3 | L2_engineering | ❌ | Account resolved via domain |
+| TKT-160067 | feature_request | P4 | product | ❌ | Forwarded to product |
+| TKT-160094 | incident | P2 | L2_engineering | ❌ | Integration failure |
+| TKT-128253 | needs_info | P3 | L1_support | ❌ | Clarification required |
+| TKT-135081 | security | P1 | security | ✅ | Data exposure per KB-6401 |
+| TKT-158764 | how_to | P4 | L1_support | ❌ | How-to query |
+
+**Key policy decisions grounded in KB:**
+- **Data Exposure / Security**: Classifies suspected data leaks as `security`/`P1` routed to `security` (`TKT-135081` per `KB-6401`).
+- **Account Risk Override**: Elevates priority and notifies TAM when within 90-day renewal and active users drop >25% (`TKT-119877` per `KB-2914`).
+- **Ambiguous Tickets**: Triggers `needs_clarification=True` without guessing (`TKT-128253`).
+- **Duplicate Detection**: Flags duplicates within 7 days on same module/error (`TKT-192732` per `KB-5930`).
+- **Trace Faithfulness**: Reasoning traces record real, chronological tool actions (5–7 steps per ticket).
 
 ---
 
@@ -44,7 +57,8 @@ Incoming Ticket ---> [Agent Loop (Gemini)] <---> [ToolKit: In-Memory Indexed Cor
 
 ## 4. Limitations
 - Pure lexical search in KB lookup may miss colloquial synonyms not present in error codes or titles.
-- Complex multi-issue tickets with competing symptoms are currently triaged under the single highest-severity category.
+- Complex multi-issue tickets with competing symptoms are triaged under the single highest-severity category.
+- **Free-tier API rate limits**: The Gemini free tier allows 15 requests/min. Running all 10 tickets consecutively triggers 429 quota errors. `run.py` includes a `--delay` flag (default 5s between tickets) and `agent.py` reads the `retryDelay` from each 429 error to back off accurately (typically ~55s). For production, use a paid tier or an exponential-backoff worker queue.
 
 ---
 

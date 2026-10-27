@@ -3,7 +3,7 @@
   "account_id": "ACC-4850",
   "category": "incident",
   "priority": "P3",
-  "route_to": "L1_support",
+  "route_to": "L2_engineering",
   "escalate": false,
   "notify_tam": false,
   "duplicate_of": null,
@@ -13,13 +13,13 @@
     "KB-2914"
   ],
   "account_signals": [
-    "Enterprise tier",
-    "Renewal date 2027-09-05 (320 days away, outside 90-day window)",
-    "Active users declined 30.8% over last 3 months (renewal within 90 days criteria not met)"
+    "Account ACC-4850 (Ironleaf Foods Europe) is Enterprise tier, ARR band 250k-500k,renewal date 2027-09-05 (320 days away, outside 90-day window).",
+    "No open escalations and last NPS is 10.",
+    "Previous ticket TKT-140891 for same error E-5214 was created 129 days ago and is resolved (outside 7-day duplicate window per KB-5930)."
   ],
-  "customer_reply": "Hello, thank you for contacting Zycus support. We have received your report regarding error E-5214 on the supplier onboarding form. This issue typically occurs when a background scheduler job is paused. Please navigate to Admin > Scheduler, locate the paused job, resume it, and run it once manually. Downstream records should update within 15 minutes. Please let us know if the issue persists so we can assist further.",
-  "internal_note": "Single user/record affected with a known workaround per KB-7072 (paused background scheduler job). Verified account ACC-4850. Renewal is 320 days out (2027-09-05), so account risk override does not apply despite the 30.8% usage decline. Route to L1 Support with KB-7072 resolution steps.",
-  "confidence": 1.0,
+  "customer_reply": "Hello, thank you for contacting Zycus Support regarding error E-5214 on your supplier onboarding form. This error typically occurs when a background scheduler job has become paused. Our team is investigating the issue. As a resolution step, please navigate to Admin > Scheduler, locate the paused job, resume it, and run it once manually. Confirm if downstream records update within 15 minutes. We will keep you updated on progress.",
+  "internal_note": "Customer is encountering error E-5214 during supplier onboarding for their EU entity. Per KB-7072, this error indicates a paused background scheduler job. Verify Admin > Scheduler, resume and manually run the scheduler job. Affected count is currently single record / onboarding form. Route to L2 Engineering if resolution steps fail.",
+  "confidence": 0.98,
   "reasoning_trace": [
     {
       "step": 1,
@@ -30,38 +30,32 @@
     {
       "step": 2,
       "action": "search_kb",
-      "input": "query=supplier onboarding form error E-5214, module=supplier portal, error_code=E-5214",
+      "input": "query=E-5214 supplier onboarding form error, module=supplier portal, error_code=E-5214",
       "observation": "Matched 5 articles. Top: [('KB-7072', 'E-5214: Supplier onboarding form returns a validation error', 'current'), ('KB-1189', 'Release notes 25.1', 'current'), ('KB-5523', 'Release notes 26.2.1', 'current')]"
     },
     {
       "step": 3,
-      "action": "get_support_policy",
-      "input": "topic=",
-      "observation": "Retrieved 3 policy articles: ['KB-2914', 'KB-5930', 'KB-6401']"
-    },
-    {
-      "step": 4,
       "action": "read_kb_article",
       "input": "article_id=KB-7072",
       "observation": "Read KB-7072: E-5214: Supplier onboarding form returns a validation error (status: current)"
     },
     {
+      "step": 4,
+      "action": "get_support_policy",
+      "input": "topic=priority",
+      "observation": "Retrieved 3 policy articles: ['KB-2914', 'KB-5930', 'KB-6401']"
+    },
+    {
       "step": 5,
       "action": "find_related_tickets",
-      "input": "account_id=ACC-4850, query=, error_code=E-5214",
-      "observation": "Found 1 related tickets. Recent open duplicates: None"
+      "input": "account_id=ACC-4850, query=E-5214 supplier onboarding form error, error_code=E-5214",
+      "observation": "Found 5 related tickets. Recent open duplicates: None"
     },
     {
       "step": 6,
       "action": "get_account_health",
       "input": "account_id=ACC-4850",
       "observation": "Tier: Enterprise, renewal in 320d, escalations: 0"
-    },
-    {
-      "step": 7,
-      "action": "get_usage_trend",
-      "input": "account_id=ACC-4850",
-      "observation": "Active users decline: 30.8%, decline > 25%: True"
     }
   ]
 }

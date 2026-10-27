@@ -7,10 +7,27 @@ Every step is recorded in reasoning_trace.
 import json
 import os
 import re
+import time
 from typing import Any
 from .llm import LLMClient
 from .tools import ToolKit, AS_OF_DATE
 from .schema import validate, CATEGORIES, PRIORITIES, ROUTES
+
+# Safety bound on Gemini tool-call iterations per ticket
+MAX_TOOL_CALLS = 20
+
+
+def _parse_retry_after(err_str: str, default: float = 60.0) -> float:
+    """Extract retryDelay seconds from a Gemini 429 error string."""
+    # Matches retryDelay: 50s  or  Please retry in 50.38s
+    import re as _re
+    m = _re.search(r"retryDelay[^:]*:[^0-9]*([0-9]+(?:[.][0-9]+)?)s", err_str)
+    if m:
+        return min(float(m.group(1)) + 5.0, 120.0)
+    m2 = _re.search(r"retry in ([0-9]+(?:[.][0-9]+)?)s", err_str, _re.IGNORECASE)
+    if m2:
+        return min(float(m2.group(1)) + 5.0, 120.0)
+    return default
 
 
 class Context:
@@ -239,8 +256,7 @@ def triage(ticket: dict, ctx: Context) -> dict:
             )
         )
 
-        import time
-        max_retries = 3
+        max_retries = 4
         response = None
         for attempt in range(max_retries):
             try:
@@ -250,14 +266,18 @@ def triage(ticket: dict, ctx: Context) -> dict:
             except Exception as e:
                 err_str = str(e)
                 if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
-                    sleep_time = 15 * (attempt + 1)
-                    print(f"Rate limited (429). Retrying in {sleep_time}s...")
+                    sleep_time = _parse_retry_after(err_str)
+                    print(f"Rate limited (429). Retrying in {sleep_time:.0f}s... (attempt {attempt+1}/{max_retries})")
                     time.sleep(sleep_time)
                 else:
-                    raise e
+                    raise
+        if response is None:
+            raise RuntimeError(f"Gemini API rate limit: all {max_retries} retries exhausted for {tid}")
 
-        out_json = _extract_json(response.text or "") if response else None
+        out_json = _extract_json(response.text or "")
 
+        # Tool-call iteration bound: if model kept calling tools without finishing,
+        # prompt it to produce the final JSON (also rate-limit safe).
         if not out_json:
             for attempt in range(max_retries):
                 try:
@@ -266,15 +286,16 @@ def triage(ticket: dict, ctx: Context) -> dict:
                         "You have gathered the evidence. Now output the final JSON triage decision matching the schema. Output JSON only."
                     )
                     out_json = _extract_json(finish_resp.text or "")
-                    break
+                    if out_json:
+                        break
                 except Exception as e:
                     err_str = str(e)
                     if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
-                        sleep_time = 15 * (attempt + 1)
-                        print(f"Rate limited (429). Retrying in {sleep_time}s...")
+                        sleep_time = _parse_retry_after(err_str)
+                        print(f"Rate limited (429) on finish prompt. Retrying in {sleep_time:.0f}s...")
                         time.sleep(sleep_time)
                     else:
-                        raise e
+                        raise
 
         final_result = out_json
     else:

@@ -23,6 +23,8 @@ def main():
     ap.add_argument("--n", type=int, default=50)
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--ids", nargs="*")
+    ap.add_argument("--delay", type=float, default=5.0,
+                    help="Seconds to wait between tickets (default 5s to respect free-tier rate limits)")
     args = ap.parse_args()
 
     tickets = load_tickets()
@@ -38,7 +40,10 @@ def main():
     by_id = tickets.set_index("ticket_id")
     ok = 0
     with open(OUT / "run_log.jsonl", "a") as log:
-        for tid in ids:
+        for i, tid in enumerate(ids):
+            if i > 0 and args.delay > 0:
+                print(f"[Delay {args.delay}s between tickets to respect rate limits...]")
+                time.sleep(args.delay)
             t0, calls0 = time.time(), ctx.llm.calls
             rec = {"ticket_id": tid}
             try:

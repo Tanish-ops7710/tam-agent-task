@@ -9,16 +9,18 @@
   "duplicate_of": null,
   "needs_clarification": false,
   "kb_references": [
-    "KB-2914",
-    "KB-4795"
+    "KB-4795",
+    "KB-2914"
   ],
   "account_signals": [
-    "Enterprise tier contract (ACC-2507)",
-    "SAML/SSO configuration changed recently on 2026-10-14 (Admin > Security > SSO history)"
+    "Enterprise account (ACC-2507)",
+    "Renewal date: 2027-03-19 (150 days out, not within 90-day risk window)",
+    "Usage trend decline: 1.5% (below 25% threshold)",
+    "Open escalations: 0"
   ],
-  "customer_reply": "Hello, thank you for contacting Zycus Support. We have received your report regarding suppliers encountering error E-3310 when submitting bids on your packaging RFx. Because the event closes in 2 days and this impairs bid submission functionality with a deadline within 72 hours, we have prioritized this as P2 and our L2 Engineering team is actively investigating. As a precaution for upcoming closing deadlines, we recommend extending the event deadline if needed to protect bid fairness while we resolve the trust relationship issue.",
-  "internal_note": "Supplier bid submission failure due to E-3310. Root cause per KB-4795: buyer tenant SSO/SAML configuration change (tenant SSO enabled on 2026-10-14) without updating supplier portal trust relationship. Priority set to P2 per KB-2914 due to business deadline at risk within 72 hours (event closes in 2 days). Route to L2 Engineering.",
-  "confidence": 0.99,
+  "customer_reply": "Hello, thank you for contacting Zycus Support. We understand that your suppliers are encountering error E-3310 when attempting to submit bids on your packaging RFx event, which closes in 2 days. This error is typically related to SSO/SAML configuration updates impacting supplier session trust. Our L2 Engineering team has been alerted to investigate this issue promptly. To help us expedite the resolution, please advise your suppliers to clear their browser sessions/cache and resubmit. Additionally, if needed, you may consider extending your event deadline to protect bid fairness.",
+  "internal_note": "Incident TKT-160094 for Frostline Telecom (ACC-2507) reporting Sourcing error E-3310 affecting supplier bid submissions. Business deadline is in 2 days (closes in 2 days, < 72 hours), impairing major function with no immediate workaround, qualifying for P2 per KB-2914. Root cause per KB-4795 is typically related to buyer tenant SSO/SAML configuration updates (SSO enabled date on account was recently 2026-10-14). Route to L2 Engineering.",
+  "confidence": 0.98,
   "reasoning_trace": [
     {
       "step": 1,
@@ -28,39 +30,39 @@
     },
     {
       "step": 2,
-      "action": "get_account_health",
-      "input": "account_id=ACC-2507",
-      "observation": "Tier: Enterprise, renewal in 150d, escalations: 0"
+      "action": "search_kb",
+      "input": "query=E-3310, module=Sourcing, error_code=E-3310",
+      "observation": "Matched 5 articles. Top: [('KB-4795', 'E-3310: Bid submission is rejected', 'current'), ('KB-1001', 'Release notes 24.1', 'current'), ('KB-1189', 'Release notes 25.1', 'current')]"
     },
     {
       "step": 3,
-      "action": "get_usage_trend",
-      "input": "account_id=ACC-2507",
-      "observation": "Active users decline: 1.5%, decline > 25%: False"
-    },
-    {
-      "step": 4,
-      "action": "search_kb",
-      "input": "query=E-3310, module=, error_code=E-3310",
-      "observation": "Matched 1 articles. Top: [('KB-4795', 'E-3310: Bid submission is rejected', 'current')]"
-    },
-    {
-      "step": 5,
       "action": "find_related_tickets",
       "input": "account_id=ACC-2507, query=, error_code=E-3310",
       "observation": "Found 0 related tickets. Recent open duplicates: None"
     },
     {
-      "step": 6,
+      "step": 4,
       "action": "get_support_policy",
-      "input": "topic=priority",
+      "input": "topic=",
       "observation": "Retrieved 3 policy articles: ['KB-2914', 'KB-5930', 'KB-6401']"
     },
     {
-      "step": 7,
+      "step": 5,
       "action": "read_kb_article",
       "input": "article_id=KB-4795",
       "observation": "Read KB-4795: E-3310: Bid submission is rejected (status: current)"
+    },
+    {
+      "step": 6,
+      "action": "get_account_health",
+      "input": "account_id=ACC-2507",
+      "observation": "Tier: Enterprise, renewal in 150d, escalations: 0"
+    },
+    {
+      "step": 7,
+      "action": "get_usage_trend",
+      "input": "account_id=ACC-2507",
+      "observation": "Active users decline: 1.5%, decline > 25%: False"
     }
   ]
 }

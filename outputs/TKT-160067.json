@@ -1,9 +1,9 @@
 {
   "ticket_id": "TKT-160067",
   "account_id": "ACC-8892",
-  "category": "how_to",
+  "category": "feature_request",
   "priority": "P4",
-  "route_to": "L1_support",
+  "route_to": "product",
   "escalate": false,
   "notify_tam": false,
   "duplicate_of": null,
@@ -13,17 +13,17 @@
   ],
   "account_signals": [
     "Enterprise tier contract",
-    "No renewal risk triggers (renewal is 2027-05-08, >90 days away)",
-    "By-design system limit (maximum 200 documents per bulk approval batch)"
+    "No recent usage decline",
+    "No open escalations"
   ],
-  "customer_reply": "Hello, thank you for reaching out to Zycus Support. Regarding your inability to bulk approve 500 purchase orders: this behavior is by design. Bulk approval accepts a maximum of 200 documents per batch to protect approval audit trails, which causes the Approve button to be greyed out when more than 200 items are selected. To resolve this, please filter your approval list (for example, by supplier or date) into batches of 200 or fewer and approve each batch sequentially. Please let us know if you need any further assistance.",
-  "internal_note": "Customer attempted to bulk approve 500 purchase orders at once, resulting in the Approve button being greyed out. Per KB-4859, bulk approval has a strict limit of 200 documents per batch by design. No bug or incident exists; resolved with standard workaround of splitting batches.",
+  "customer_reply": "Hello, thank you for reaching out to Zycus Support. The greyed-out Approve button when selecting 500 purchase orders is by design. Bulk approval accepts a maximum of 200 documents per batch to protect approval audit trails. To process your purchase orders, please filter your approval list into batches of 200 or fewer. If your team requires a higher batch limit, we have logged this as a feature request for the Product team.",
+  "internal_note": "Customer attempted to bulk approve 500 purchase orders at once, causing the Approve button to disable. Per KB-4859, bulk approval has a strict platform limit of 200 documents per batch by design. Routed to Product as a feature request / how-to guidance provided.",
   "confidence": 1.0,
   "reasoning_trace": [
     {
       "step": 1,
       "action": "lookup_account",
-      "input": "account_id=ACC-8892, requester_domain=, company_name=",
+      "input": "account_id=ACC-8892, requester_domain=copperfield-brands.example, company_name=Copperfield Brands",
       "observation": "Resolved ACC-8892 (Copperfield Brands), tier: Enterprise"
     },
     {
@@ -40,20 +40,20 @@
     },
     {
       "step": 4,
-      "action": "search_kb",
-      "input": "query=bulk approve purchase orders greyed out limit, module=, error_code=",
-      "observation": "Matched 5 articles. Top: [('KB-4449', 'How to: Delegate approvals while out of office', 'current'), ('KB-2430', 'How to: Bulk-approve purchase orders', 'current'), ('KB-4220', 'E-8173: Role permission times out', 'current')]"
+      "action": "find_related_tickets",
+      "input": "account_id=ACC-8892, query=bulk approve purchase orders, error_code=",
+      "observation": "Found 1 related tickets. Recent open duplicates: None"
     },
     {
       "step": 5,
-      "action": "find_related_tickets",
-      "input": "account_id=ACC-8892, query=, error_code=",
-      "observation": "Found 0 related tickets. Recent open duplicates: None"
+      "action": "search_kb",
+      "input": "query=bulk approve purchase orders limit, module=eProcurement, error_code=",
+      "observation": "Matched 5 articles. Top: [('KB-2430', 'How to: Bulk-approve purchase orders', 'current'), ('KB-4449', 'How to: Delegate approvals while out of office', 'current'), ('KB-4859', 'Bulk approval limits (by design)', 'current')]"
     },
     {
       "step": 6,
       "action": "get_support_policy",
-      "input": "topic=priority",
+      "input": "topic=",
       "observation": "Retrieved 3 policy articles: ['KB-2914', 'KB-5930', 'KB-6401']"
     },
     {

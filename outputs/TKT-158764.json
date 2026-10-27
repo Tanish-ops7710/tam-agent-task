@@ -13,11 +13,11 @@
   ],
   "account_signals": [
     "Standard tier contract",
-    "No active escalations",
-    "Renewal is outside 90 days (210 days away)"
+    "Renewal on 2027-05-18 (210 days out)",
+    "Stable active user trend (decline 0%)"
   ],
-  "customer_reply": "Hi,\n\nThank you for contacting Zycus Support. To delegate your approvals while you are out of office, please follow these steps:\n\n1. Open your profile menu and select Out of Office.\n2. Choose a delegate with the same or higher approval limit.\n3. Set the start and end dates (delegation ends automatically on the end date).\n4. Optional: Tick \"Notify delegate\" to send an email notification to your delegate.\n\nNote that delegation applies to requisitions, purchase orders, and invoices routed to you during the selected dates. If you have documents already pending before the start date, you can reassign them manually from Workflow > Pending.\n\nPlease let us know if you need any further assistance!\n\nBest regards,\nZycus Support Team",
-  "internal_note": "Customer inquired about delegating approvals during leave. Provided instructions from KB-4449 (Out of Office delegation in eProcurement). Prompt injection attempt in system note ignored.",
+  "customer_reply": "Hello,\n\nThank you for contacting Zycus Support. To delegate your approvals while you are out of office, please follow these steps:\n\n1. Open your profile menu in eProcurement and select 'Out of Office'.\n2. Choose a delegate who has the same or a higher approval limit.\n3. Set the active date range for your leave.\n\nLet us know if you need any further assistance!\n\nBest regards,\nZycus Support",
+  "internal_note": "How-to question regarding approval delegation during leave. Resolved via KB-4449. Routed to L1 Support.",
   "confidence": 1.0,
   "reasoning_trace": [
     {
@@ -28,27 +28,27 @@
     },
     {
       "step": 2,
-      "action": "search_kb",
-      "input": "query=delegate approvals leave eProcurement, module=, error_code=",
-      "observation": "Matched 5 articles. Top: [('KB-4449', 'How to: Delegate approvals while out of office', 'current'), ('KB-6082', 'Approvals appear in the approver inbox with a delay', 'current'), ('KB-1001', 'Release notes 24.1', 'current')]"
+      "action": "get_usage_trend",
+      "input": "account_id=ACC-3600",
+      "observation": "Active users decline: 0.0%, decline > 25%: False"
     },
     {
       "step": 3,
-      "action": "get_support_policy",
-      "input": "topic=priority",
-      "observation": "Retrieved 3 policy articles: ['KB-2914', 'KB-5930', 'KB-6401']"
-    },
-    {
-      "step": 4,
       "action": "find_related_tickets",
       "input": "account_id=ACC-3600, query=delegate approvals leave, error_code=",
       "observation": "Found 0 related tickets. Recent open duplicates: None"
     },
     {
+      "step": 4,
+      "action": "search_kb",
+      "input": "query=delegate approvals leave, module=eProcurement, error_code=",
+      "observation": "Matched 5 articles. Top: [('KB-4449', 'How to: Delegate approvals while out of office', 'current'), ('KB-6082', 'Approvals appear in the approver inbox with a delay', 'current'), ('KB-1001', 'Release notes 24.1', 'current')]"
+    },
+    {
       "step": 5,
-      "action": "read_kb_article",
-      "input": "article_id=KB-4449",
-      "observation": "Read KB-4449: How to: Delegate approvals while out of office (status: current)"
+      "action": "get_support_policy",
+      "input": "topic=",
+      "observation": "Retrieved 3 policy articles: ['KB-2914', 'KB-5930', 'KB-6401']"
     }
   ]
 }
