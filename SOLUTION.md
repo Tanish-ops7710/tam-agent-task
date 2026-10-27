@@ -23,42 +23,44 @@ Incoming Ticket ---> [Agent Loop (Gemini)] <---> [ToolKit: In-Memory Indexed Cor
 
 ---
 
-## 2. Evaluation Results
-**10/10 review tickets pass** automated structural and type validation (`scripts/check_outputs.py`).
+## 2. Evaluation & Production Quality Metrics
+**Review Benchmark**: 10/10 review tickets pass automated validation (`scripts/check_outputs.py`).
 
-| Ticket | Category | Priority | Route | Escalate | Notes |
-|---|---|---|---|---|---|
-| TKT-144939 | incident | P1 | L2_engineering | ✅ | High-severity incident |
-| TKT-119877 | how_to | P3 | L1_support | ❌ | Usage guidance |
-| TKT-160477 | incident | P3 | L1_support | ❌ | Standard incident |
-| TKT-192732 | duplicate | P3 | L1_support | ❌ | Linked to prior ticket |
-| TKT-169327 | incident | P3 | L2_engineering | ❌ | Account resolved via domain |
-| TKT-160067 | feature_request | P4 | product | ❌ | Forwarded to product |
-| TKT-160094 | incident | P2 | L2_engineering | ❌ | Integration failure |
-| TKT-128253 | needs_info | P3 | L1_support | ❌ | Clarification required |
-| TKT-135081 | security | P1 | security | ✅ | Data exposure per KB-6401 |
-| TKT-158764 | how_to | P4 | L1_support | ❌ | How-to query |
+| Ticket | Category | Priority | Route | Escalate | Notes / Grounded Policy |
+|---|---|---|---|:---:|---|
+| TKT-144939 | incident | P1 | L2_engineering | ✅ | High-severity OCR outage (`KB-3985`, `KB-2914`) |
+| TKT-119877 | how_to | P3 | L1_support | ✅ | Risk override: 61d renewal, 38% user drop (`KB-2914`) |
+| TKT-160477 | incident | P3 | L1_support | ❌ | Standard single-user invoice issue |
+| TKT-192732 | duplicate | P3 | L1_support | ❌ | Linked to prior open ticket within 7 days (`KB-5930`) |
+| TKT-169327 | incident | P3 | L2_engineering | ❌ | Account resolved via email domain match |
+| TKT-160067 | feature_request | P4 | product | ❌ | Forwarded to product team for roadmap review |
+| TKT-160094 | incident | P2 | L2_engineering | ❌ | High-impact ERP integration sync failure |
+| TKT-128253 | needs_info | P3 | L1_support | ❌ | Ambiguous description (`needs_clarification: true`) |
+| TKT-135081 | security | P1 | security | ✅ | Cross-tenant data exposure protocol (`KB-6401`) |
+| TKT-158764 | how_to | P4 | L1_support | ❌ | Routine module navigation query |
 
-**Key policy decisions grounded in KB:**
-- **Data Exposure / Security**: Classifies suspected data leaks as `security`/`P1` routed to `security` (`TKT-135081` per `KB-6401`).
-- **Account Risk Override**: Elevates priority and notifies TAM when within 90-day renewal and active users drop >25% (`TKT-119877` per `KB-2914`).
-- **Ambiguous Tickets**: Triggers `needs_clarification=True` without guessing (`TKT-128253`).
-- **Duplicate Detection**: Flags duplicates within 7 days on same module/error (`TKT-192732` per `KB-5930`).
-- **Trace Faithfulness**: Reasoning traces record real, chronological tool actions (5–7 steps per ticket).
+**Measurable Quality Criteria for Production Readiness**:
+1. **Schema Compliance & Type Safety**: 100% adherence to `schema.py` (valid enums, non-empty traces, bounded confidence).
+2. **Account Resolution Accuracy**: >99% precision/recall resolving missing `account_id` via domain and company name maps.
+3. **Classification & Routing Macro-F1**: Measure Category, Priority, and Routing against expert-labeled test sets ($\ge 0.90$ target; 100% recall on P1 security leaks).
+4. **Citation Faithfulness**: Zero hallucinated KB IDs; all cited articles exist in the corpus and are verified current (not deprecated).
+5. **Duplicate Detection F1**: High precision on 7-day duplicate matching per `KB-5930` with zero self-referencing duplicates.
+6. **TAM Alerting Precision**: High recall on alerting TAMs for accounts within 90 days of renewal with >25% usage drops or $\ge 2$ escalations.
+7. **Customer Reply Safety & Tone**: LLM-as-a-judge / human audit ensuring helpful, empathetic replies without liability-admitting text.
 
 ---
 
 ## 3. Scaling to 10x (30,000 Tickets & 4,000 Articles)
-- **Database & Indexing**: Replace in-memory dictionaries with indexed SQLite/PostgreSQL for account and ticket history. Use SQLite FTS5 or BM25/hybrid vector search with metadata filtering for KB retrieval.
-- **Latency & Cost**: Cache policy articles and frequent account lookups in Redis to eliminate redundant tool executions. Batch pre-triage embeddings offline.
-- **Rate-Limiting & Throughput**: Implement exponential backoff queues with worker pools to respect model rate limits across multi-tenant workloads.
+- **Database & Indexing**: Replace in-memory dictionaries with indexed PostgreSQL for tickets/accounts. Use SQLite FTS5 or hybrid dense/sparse vector search (e.g., Qdrant/pgvector + BM25) for KB retrieval.
+- **Latency & Cost**: Cache frequent policy articles (`KB-2914`, `KB-6401`) and account metadata in Redis to eliminate redundant lookups.
+- **Throughput**: Decouple triage ingestion with distributed worker queues (Celery/RabbitMQ) and token-bucket rate limiting.
 
 ---
 
 ## 4. Limitations
-- Pure lexical search in KB lookup may miss colloquial synonyms not present in error codes or titles.
-- Complex multi-issue tickets with competing symptoms are triaged under the single highest-severity category.
-- **Free-tier API rate limits**: The Gemini free tier allows 15 requests/min. Running all 10 tickets consecutively triggers 429 quota errors. `run.py` includes a `--delay` flag (default 5s between tickets) and `agent.py` reads the `retryDelay` from each 429 error to back off accurately (typically ~55s). For production, use a paid tier or an exponential-backoff worker queue.
+- Pure lexical token matching in KB search may miss colloquial synonyms not present in titles or error codes.
+- Multi-issue tickets with competing symptoms are triaged strictly under their highest-severity symptom.
+- Free-tier API rate limits can trigger HTTP 429 errors during batch execution; `agent.py` dynamically extracts server-suggested `retryDelay` to back off accurately, and `run.py` includes a configurable `--delay` flag. Production requires paid tier concurrency.
 
 ---
 
