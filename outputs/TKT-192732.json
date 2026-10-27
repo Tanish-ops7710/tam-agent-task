@@ -1,0 +1,59 @@
+{
+  "ticket_id": "TKT-192732",
+  "account_id": "ACC-6031",
+  "category": "duplicate",
+  "priority": "P3",
+  "route_to": "L1_support",
+  "escalate": false,
+  "notify_tam": false,
+  "duplicate_of": "TKT-122022",
+  "needs_clarification": false,
+  "kb_references": [
+    "KB-5930",
+    "KB-2982"
+  ],
+  "account_signals": [
+    "Duplicate ticket: same account (ACC-6031), same module (Spend Analytics), same error code (E-6105) within 7 days of open ticket TKT-122022"
+  ],
+  "customer_reply": "Hello, thank you for following up. We are continuing to track this spend dashboard refreshing issue under your existing open ticket TKT-122022. Our engineering team is investigating error E-6105, and we will update you there as soon as we have more information.",
+  "internal_note": "Identified as a duplicate of open ticket TKT-122022 created on 2026-10-17 with error E-6105 in Spend Analytics. Per KB-5930, linked duplicate_of to TKT-122022.",
+  "confidence": 1.0,
+  "reasoning_trace": [
+    {
+      "step": 1,
+      "action": "lookup_account",
+      "input": "account_id=ACC-6031, requester_domain=, company_name=",
+      "observation": "Resolved ACC-6031 (Riverbend Health), tier: Enterprise"
+    },
+    {
+      "step": 2,
+      "action": "get_account_health",
+      "input": "account_id=ACC-6031",
+      "observation": "Tier: Enterprise, renewal in 46d, escalations: 0"
+    },
+    {
+      "step": 3,
+      "action": "get_usage_trend",
+      "input": "account_id=ACC-6031",
+      "observation": "Active users decline: 0.0%, decline > 25%: False"
+    },
+    {
+      "step": 4,
+      "action": "find_related_tickets",
+      "input": "account_id=ACC-6031, query=, error_code=E-6105",
+      "observation": "Found 2 related tickets. Recent open duplicates: ['TKT-122022']"
+    },
+    {
+      "step": 5,
+      "action": "search_kb",
+      "input": "query=spend dashboard E-6105, module=, error_code=E-6105",
+      "observation": "Matched 5 articles. Top: [('KB-2982', 'E-6105: Dashboard does not refresh', 'current'), ('KB-1586', 'Release notes 24.3', 'current'), ('KB-2817', 'Configuration reference: Dashboard mapping', 'current')]"
+    },
+    {
+      "step": 6,
+      "action": "get_support_policy",
+      "input": "topic=",
+      "observation": "Retrieved 3 policy articles: ['KB-2914', 'KB-5930', 'KB-6401']"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "ticket_id": "TKT-119877",
+  "account_id": "ACC-2431",
+  "category": "how_to",
+  "priority": "P3",
+  "route_to": "L1_support",
+  "escalate": true,
+  "notify_tam": true,
+  "duplicate_of": null,
+  "needs_clarification": false,
+  "kb_references": [
+    "KB-2914",
+    "KB-6082"
+  ],
+  "account_signals": [
+    "Renewal within 90 days (61 days to renewal: 2026-12-20)",
+    "Active users declined 38.4% over the last 3 months (exceeds 25% threshold)",
+    "2 open escalations present"
+  ],
+  "customer_reply": "Hello, thank you for reaching out to Zycus Support. Regarding your question on purchase order approval delivery times, approval routing and workflow queue intervals can be verified under Admin > Scheduler > Workflow Dispatcher, and rule consolidation can also impact processing speed. Because Pinecrest Logistics is approaching renewal and we want to ensure your eProcurement experience is running smoothly, our Technical Account Management and Support teams have been alerted to review your workflow configuration. An L1 Support engineer will follow up shortly.",
+  "internal_note": "Customer is asking about delayed purchase order approval visibility in approver inboxes (eProcurement module). Checked KB-6082: causes include batch workflow queue processing, dispatcher intervals > 5 mins, or large numbers of auto-approval rules. Note that account ACC-2431 is Premium tier, renews on 2026-12-20 (61 days), has 2 open escalations, and experienced a 38.4% usage decline over the past 3 months. Per policy KB-2914 (Account risk override), priority is raised from P4 to P3, escalate is set to true, and TAM notification is triggered. Route to L1 Support to assist the customer with checking the Workflow Dispatcher interval and approval rules.",
+  "confidence": 1.0,
+  "reasoning_trace": [
+    {
+      "step": 1,
+      "action": "lookup_account",
+      "input": "account_id=ACC-2431, requester_domain=, company_name=",
+      "observation": "Resolved ACC-2431 (Pinecrest Logistics), tier: Premium"
+    },
+    {
+      "step": 2,
+      "action": "get_account_health",
+      "input": "account_id=ACC-2431",
+      "observation": "Tier: Premium, renewal in 61d, escalations: 2"
+    },
+    {
+      "step": 3,
+      "action": "get_usage_trend",
+      "input": "account_id=ACC-2431",
+      "observation": "Active users decline: 38.4%, decline > 25%: True"
+    },
+    {
+      "step": 4,
+      "action": "find_related_tickets",
+      "input": "account_id=ACC-2431, query=approvals purchase orders slow inbox, error_code=",
+      "observation": "Found 0 related tickets. Recent open duplicates: None"
+    },
+    {
+      "step": 5,
+      "action": "search_kb",
+      "input": "query=approval workflow slow purchase order notification queue lag eProcurement, module=, error_code=",
+      "observation": "Matched 5 articles. Top: [('KB-1001', 'Release notes 24.1', 'current'), ('KB-4889', 'Release notes 26.1', 'current'), ('KB-5523', 'Release notes 26.2.1', 'current')]"
+    },
+    {
+      "step": 6,
+      "action": "read_kb_article",
+      "input": "article_id=KB-6082",
+      "observation": "Read KB-6082: Approvals appear in the approver inbox with a delay (status: current)"
+    },
+    {
+      "step": 7,
+      "action": "get_support_policy",
+      "input": "topic=priority",
+      "observation": "Retrieved 3 policy articles: ['KB-2914', 'KB-5930', 'KB-6401']"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "ticket_id": "TKT-144939",
+  "account_id": "ACC-3751",
+  "category": "incident",
+  "priority": "P1",
+  "route_to": "L2_engineering",
+  "escalate": true,
+  "notify_tam": true,
+  "duplicate_of": null,
+  "needs_clarification": false,
+  "kb_references": [
+    "KB-3985",
+    "KB-2914"
+  ],
+  "account_signals": [
+    "Premium tier account with ARR band 1M+",
+    "Renewal date approaching on 2026-12-04 (within 90 days)",
+    "Active incident INC-26-0418 affecting module eInvoice with error E-4102 blocking all scanned invoice uploads"
+  ],
+  "customer_reply": "Hello, thank you for reaching out to Zycus Support. We have verified your report and confirmed that this is tied to an active system-wide incident (INC-26-0418) affecting invoice OCR processing with error E-4102 following release 26.2.3. Our Engineering team is actively working on a hotfix. In the meantime, as a temporary workaround, you can switch affected invoice channels to Manual Entry mode via Admin > eInvoice > Channels for time-sensitive invoices while we work to resolve this. We will keep you updated as soon as the hotfix is deployed.",
+  "internal_note": "Linked to active incident INC-26-0418 (KB-3985). Invoice OCR processing is failing with E-4102 for account ACC-3751. Routed to L2 Engineering per known issue handling. Premium account with renewal on 2026-12-04; TAM notified.",
+  "confidence": 1.0,
+  "reasoning_trace": [
+    {
+      "step": 1,
+      "action": "lookup_account",
+      "input": "account_id=ACC-3751, requester_domain=, company_name=",
+      "observation": "Resolved ACC-3751 (Brightfield Manufacturing), tier: Premium"
+    },
+    {
+      "step": 2,
+      "action": "search_kb",
+      "input": "query=E-4102 OCR failure, module=eInvoice, error_code=E-4102",
+      "observation": "Matched 5 articles. Top: [('KB-3985', 'KNOWN ISSUE: Invoice OCR jobs fail with E-4102 after release 26.2.3', 'active_incident'), ('KB-7914', 'E-4102: Invoice ocr job stays stuck in processing', 'current'), ('KB-9216', 'How to: Upload invoices for OCR', 'current')]"
+    },
+    {
+      "step": 3,
+      "action": "get_support_policy",
+      "input": "topic=priority",
+      "observation": "Retrieved 3 policy articles: ['KB-2914', 'KB-5930', 'KB-6401']"
+    },
+    {
+      "step": 4,
+      "action": "get_support_policy",
+      "input": "topic=duplicate",
+      "observation": "Retrieved 1 policy articles: ['KB-5930']"
+    },
+    {
+      "step": 5,
+      "action": "find_related_tickets",
+      "input": "account_id=ACC-3751, query=, error_code=E-4102",
+      "observation": "Found 0 related tickets. Recent open duplicates: None"
+    },
+    {
+      "step": 6,
+      "action": "read_kb_article",
+      "input": "article_id=KB-3985",
+      "observation": "Read KB-3985: KNOWN ISSUE: Invoice OCR jobs fail with E-4102 after release 26.2.3 (status: active_incident)"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "ticket_id": "TKT-135081",
+  "account_id": "ACC-7533",
+  "category": "security",
+  "priority": "P1",
+  "route_to": "security",
+  "escalate": true,
+  "notify_tam": false,
+  "duplicate_of": null,
+  "needs_clarification": false,
+  "kb_references": [
+    "KB-6401"
+  ],
+  "account_signals": [
+    "Enterprise tier contract (Silverline Energy)",
+    "Customer described a potential data exposure incident where a supplier saw competing bid amounts"
+  ],
+  "customer_reply": "Hello, thank you for reaching out and reporting this incident. We take data privacy and security very seriously. Our Security team has been immediately engaged to investigate this matter. We recommend pausing any ongoing sourcing events related to this incident until our Security team confirms containment. We will follow up with updates as soon as possible.",
+  "internal_note": "Customer reported that during a reverse auction, a supplier could see the bid amounts of a competing supplier. Per KB-6401 (Handling suspected data exposure between suppliers or tenants), any report of users/suppliers seeing data they should not see must be classified as Category: security, Priority: P1, routed to Security, and escalated immediately. Do not attempt reproduction in tenant.",
+  "confidence": 1.0,
+  "reasoning_trace": [
+    {
+      "step": 1,
+      "action": "lookup_account",
+      "input": "account_id=ACC-7533, requester_domain=, company_name=",
+      "observation": "Resolved ACC-7533 (Silverline Energy), tier: Enterprise"
+    },
+    {
+      "step": 2,
+      "action": "get_account_health",
+      "input": "account_id=ACC-7533",
+      "observation": "Tier: Enterprise, renewal in 308d, escalations: 0"
+    },
+    {
+      "step": 3,
+      "action": "get_usage_trend",
+      "input": "account_id=ACC-7533",
+      "observation": "Active users decline: 0.0%, decline > 25%: False"
+    },
+    {
+      "step": 4,
+      "action": "find_related_tickets",
+      "input": "account_id=ACC-7533, query=auction bid amounts competing supplier, error_code=",
+      "observation": "Found 4 related tickets. Recent open duplicates: None"
+    },
+    {
+      "step": 5,
+      "action": "search_kb",
+      "input": "query=supplier see competing supplier bid auction data exposure, module=, error_code=",
+      "observation": "Matched 5 articles. Top: [('KB-1001', 'Release notes 24.1', 'current'), ('KB-3628', 'Release notes 24.2', 'current'), ('KB-6401', 'Handling suspected data exposure between suppliers or tenants', 'current')]"
+    },
+    {
+      "step": 6,
+      "action": "get_support_policy",
+      "input": "topic=data exposure security",
+      "observation": "Retrieved 0 policy articles: []"
+    },
+    {
+      "step": 7,
+      "action": "read_kb_article",
+      "input": "article_id=KB-6401",
+      "observation": "Read KB-6401: Handling suspected data exposure between suppliers or tenants (status: current)"
+    }
+  ]
+}

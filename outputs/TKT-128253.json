@@ -1,0 +1,54 @@
+{
+  "ticket_id": "TKT-128253",
+  "account_id": "ACC-3737",
+  "category": "needs_info",
+  "priority": "P3",
+  "route_to": "L1_support",
+  "escalate": false,
+  "notify_tam": false,
+  "duplicate_of": null,
+  "needs_clarification": true,
+  "kb_references": [
+    "KB-2914"
+  ],
+  "account_signals": [
+    "Account tier: Standard",
+    "No renewal within 90 days",
+    "No open escalations or active incidents"
+  ],
+  "customer_reply": "Hello, thank you for contacting Zycus Support. We received your report that something is not working, but we need a bit more information to assist you effectively. Could you please specify which module or page you are trying to access, any error codes or messages you are seeing, and the steps to reproduce the issue? Once we have these details, our support team will investigate promptly.",
+  "internal_note": "Ticket description is extremely vague ('Nothing is working since yesterday'). Per KB-2914 (Insufficient information policy), when the module or symptom cannot be determined, do not guess. Set P3, request specific details (module, error text, affected users, time of failure), and route to L1 Support with needs_clarification = true.",
+  "confidence": 1.0,
+  "reasoning_trace": [
+    {
+      "step": 1,
+      "action": "lookup_account",
+      "input": "account_id=ACC-3737, requester_domain=, company_name=",
+      "observation": "Resolved ACC-3737 (Clearwater Manufacturing), tier: Standard"
+    },
+    {
+      "step": 2,
+      "action": "get_account_health",
+      "input": "account_id=ACC-3737",
+      "observation": "Tier: Standard, renewal in 300d, escalations: 0"
+    },
+    {
+      "step": 3,
+      "action": "get_usage_trend",
+      "input": "account_id=ACC-3737",
+      "observation": "Active users decline: 0.0%, decline > 25%: False"
+    },
+    {
+      "step": 4,
+      "action": "find_related_tickets",
+      "input": "account_id=ACC-3737, query=, error_code=",
+      "observation": "Found 0 related tickets. Recent open duplicates: None"
+    },
+    {
+      "step": 5,
+      "action": "get_support_policy",
+      "input": "topic=priority",
+      "observation": "Retrieved 3 policy articles: ['KB-2914', 'KB-5930', 'KB-6401']"
+    }
+  ]
+}

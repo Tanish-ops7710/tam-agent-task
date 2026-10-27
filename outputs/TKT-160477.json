@@ -1,0 +1,68 @@
+{
+  "ticket_id": "TKT-160477",
+  "account_id": "ACC-1633",
+  "category": "incident",
+  "priority": "P3",
+  "route_to": "L1_support",
+  "escalate": false,
+  "notify_tam": false,
+  "duplicate_of": null,
+  "needs_clarification": false,
+  "kb_references": [
+    "KB-1786",
+    "KB-2914"
+  ],
+  "account_signals": [
+    "Account tier: Standard",
+    "Days to renewal: 240 days (renewal not within 90 days)",
+    "No open escalations",
+    "Usage trend stable (active users decline < 25%)"
+  ],
+  "customer_reply": "Hello, thank you for reaching out to Zycus Support. We understand you are experiencing error E-2207 when sending supplier agreements for e-signature, blocking two contracts. This is typically caused by an expired integration credential. Please have your tenant administrator navigate to Admin > Integrations > Credentials, regenerate the credential, update it in the connected system, and then trigger a manual sync to resolve the issue. If the error persists after completing these steps, please let us know so we can assist further.",
+  "internal_note": "Error E-2207 encountered on CLM module affecting 2 contracts (single user/record group with workaround per KB-1786). Resolution steps: Admin > Integrations > Credentials -> regenerate credential -> update in connected system -> trigger manual sync. No account risk override triggered (renewal is 240 days away, usage decline is only 0.4%, open escalations = 0). Route to L1 Support with P3 priority.",
+  "confidence": 1.0,
+  "reasoning_trace": [
+    {
+      "step": 1,
+      "action": "lookup_account",
+      "input": "account_id=ACC-1633, requester_domain=, company_name=",
+      "observation": "Resolved ACC-1633 (Frostline Retail Group), tier: Standard"
+    },
+    {
+      "step": 2,
+      "action": "get_account_health",
+      "input": "account_id=ACC-1633",
+      "observation": "Tier: Standard, renewal in 240d, escalations: 0"
+    },
+    {
+      "step": 3,
+      "action": "get_usage_trend",
+      "input": "account_id=ACC-1633",
+      "observation": "Active users decline: 0.4%, decline > 25%: False"
+    },
+    {
+      "step": 4,
+      "action": "search_kb",
+      "input": "query=E-2207 signature request rejected, module=CLM, error_code=E-2207",
+      "observation": "Matched 5 articles. Top: [('KB-1786', 'E-2207: E-signature request is rejected', 'current'), ('KB-2605', '[DEPRECATED] E-2207: E-signature request is rejected', 'deprecated'), ('KB-1001', 'Release notes 24.1', 'current')]"
+    },
+    {
+      "step": 5,
+      "action": "find_related_tickets",
+      "input": "account_id=ACC-1633, query=, error_code=E-2207",
+      "observation": "Found 0 related tickets. Recent open duplicates: None"
+    },
+    {
+      "step": 6,
+      "action": "get_support_policy",
+      "input": "topic=priority",
+      "observation": "Retrieved 3 policy articles: ['KB-2914', 'KB-5930', 'KB-6401']"
+    },
+    {
+      "step": 7,
+      "action": "read_kb_article",
+      "input": "article_id=KB-1786",
+      "observation": "Read KB-1786: E-2207: E-signature request is rejected (status: current)"
+    }
+  ]
+}

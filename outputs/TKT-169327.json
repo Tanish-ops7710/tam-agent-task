@@ -1,0 +1,67 @@
+{
+  "ticket_id": "TKT-169327",
+  "account_id": "ACC-4850",
+  "category": "incident",
+  "priority": "P3",
+  "route_to": "L1_support",
+  "escalate": false,
+  "notify_tam": false,
+  "duplicate_of": null,
+  "needs_clarification": false,
+  "kb_references": [
+    "KB-7072",
+    "KB-2914"
+  ],
+  "account_signals": [
+    "Enterprise tier",
+    "Renewal date 2027-09-05 (320 days away, outside 90-day window)",
+    "Active users declined 30.8% over last 3 months (renewal within 90 days criteria not met)"
+  ],
+  "customer_reply": "Hello, thank you for contacting Zycus support. We have received your report regarding error E-5214 on the supplier onboarding form. This issue typically occurs when a background scheduler job is paused. Please navigate to Admin > Scheduler, locate the paused job, resume it, and run it once manually. Downstream records should update within 15 minutes. Please let us know if the issue persists so we can assist further.",
+  "internal_note": "Single user/record affected with a known workaround per KB-7072 (paused background scheduler job). Verified account ACC-4850. Renewal is 320 days out (2027-09-05), so account risk override does not apply despite the 30.8% usage decline. Route to L1 Support with KB-7072 resolution steps.",
+  "confidence": 1.0,
+  "reasoning_trace": [
+    {
+      "step": 1,
+      "action": "lookup_account",
+      "input": "account_id=, requester_domain=ironleaf-foods-europe.example, company_name=Ironleaf Foods EU",
+      "observation": "Resolved ACC-4850 (Ironleaf Foods Europe), tier: Enterprise"
+    },
+    {
+      "step": 2,
+      "action": "search_kb",
+      "input": "query=supplier onboarding form error E-5214, module=supplier portal, error_code=E-5214",
+      "observation": "Matched 5 articles. Top: [('KB-7072', 'E-5214: Supplier onboarding form returns a validation error', 'current'), ('KB-1189', 'Release notes 25.1', 'current'), ('KB-5523', 'Release notes 26.2.1', 'current')]"
+    },
+    {
+      "step": 3,
+      "action": "get_support_policy",
+      "input": "topic=",
+      "observation": "Retrieved 3 policy articles: ['KB-2914', 'KB-5930', 'KB-6401']"
+    },
+    {
+      "step": 4,
+      "action": "read_kb_article",
+      "input": "article_id=KB-7072",
+      "observation": "Read KB-7072: E-5214: Supplier onboarding form returns a validation error (status: current)"
+    },
+    {
+      "step": 5,
+      "action": "find_related_tickets",
+      "input": "account_id=ACC-4850, query=, error_code=E-5214",
+      "observation": "Found 1 related tickets. Recent open duplicates: None"
+    },
+    {
+      "step": 6,
+      "action": "get_account_health",
+      "input": "account_id=ACC-4850",
+      "observation": "Tier: Enterprise, renewal in 320d, escalations: 0"
+    },
+    {
+      "step": 7,
+      "action": "get_usage_trend",
+      "input": "account_id=ACC-4850",
+      "observation": "Active users decline: 30.8%, decline > 25%: True"
+    }
+  ]
+}
